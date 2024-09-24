@@ -1,9 +1,37 @@
 Class {
 	#name : 'MCBViewWidget',
 	#superclass : 'WCComponent',
+	#instVars : [
+		'recipe'
+	],
+	#classInstVars : [
+		'translator'
+	],
 	#category : 'MyCookingBook',
 	#package : 'MyCookingBook'
 }
+
+{ #category : 'accessing' }
+MCBViewWidget class >> _translator [
+
+	<pharoJsSkip>
+	^ translator ifNil: [ translator := I18NTranslator forLanguage: 'EN' ]
+]
+
+{ #category : 'accessing' }
+MCBViewWidget class >> translator [
+
+	^ translator ifNil: [ 
+		  translator := PhxJsonReader readFromString:
+			                      self translatorSerialized ]
+]
+
+{ #category : 'accessing' }
+MCBViewWidget class >> translatorSerialized [
+
+	<jsLiteralGenerator>
+	^ self _translator asPhxJsonString
+]
 
 { #category : 'rendering' }
 MCBViewWidget >> _getLocationHash [
@@ -29,7 +57,7 @@ MCBViewWidget >> getLocationHash [
 
 { #category : 'rendering' }
 MCBViewWidget >> renderHtmlOn: html [
-
+	recipe ifNil: [ recipe := MCBRecipe any ].
 	html div
 		class: 'container';
 		with: [ :cont |
@@ -38,7 +66,7 @@ MCBViewWidget >> renderHtmlOn: html [
 				with: [ :card |
 					card div
 						class: 'card-header';
-						with: 'Ubuntu Name Generator'.
+						with: (self translator translationFor: recipe title).
 					card div
 						class: 'card-body';
 						with: [ :cardBody |
@@ -85,4 +113,9 @@ MCBViewWidget >> start [
 		(self getLocationHash at: 1 ifAbsent: [ '' ]).
 	generatedName := self generateNameWithTextInput: nameInput.
 	result innerHTML: generatedName
+]
+
+{ #category : 'rendering' }
+MCBViewWidget >> translator [
+	^ self class translator
 ]

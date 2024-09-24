@@ -17,5 +17,5 @@ BaselineOfMyCookingBook >> baseline: spec [
 			baseline: 'Camping'
 			with: [ spec repository: 'github://mattonem/WildCamping' ].
 
-		spec package: #MyCookingBook with: [ spec requires: #( Camping I18N ) ] ]
+		spec package: #MCBRecipe with: [ spec requires: #( Camping I18N ) ] ]
 ]
